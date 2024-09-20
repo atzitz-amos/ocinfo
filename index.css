@@ -1,0 +1,37 @@
+
+body {
+    background: #161621;
+}
+
+
+.card {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    background: radial-gradient(#ffffff, #545454);
+    box-shadow: inset -4px 6px 20px #ffffff;
+    z-index: 100;
+
+    transform: skewX(10deg) rotateY(46deg);
+}
+
+.card-right {
+    transform: skewX(-10deg) rotateY(46deg);
+}
+
+.card-shadow {
+    position: absolute;
+    z-index: -1;
+    transform: skewX(60deg);
+    width: 75px;
+    height: 20px;
+    top: 187.74px;
+    left: 39px;
+    background: #7c7c7c;
+}
+
+.card-right ~ .card-shadow {
+    transform: skewX(-60deg);
+    top: 187.74px;
+    left: 103px;
+}

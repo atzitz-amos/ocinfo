@@ -10,8 +10,12 @@
             this.x = x;
             this.y = y;
             this.z = z;
-        }, PhysicalObject: function (properties = null) {
+        },
+        PhysicalObject: function (properties = null) {
             this.mass = properties.mass;
+            this.inertia_momentum = properties.inertia_momentum;
+
+            this.verticies
 
             this.position = new ENGINE.Vector(
                 properties.x || 0,
@@ -38,6 +42,18 @@
                 0,
                 properties.angular_acceleration || 0
             );
+        },
+        World: function (options) {
+            this.renderer = options || new ENGINE.Renderer();
+        },
+        Renderer: function () {
+
+        }
+    });
+
+    Object.assign(ENGINE, {
+        createSquareObject: function () {
+
         }
     });
 
@@ -66,6 +82,14 @@
         }
     });
     assign(ENGINE.PhysicalObject, {
+        render: function (renderer) {
+
+        }
+    });
+    assign(ENGINE.World, {
+
+    });
+    assign(ENGINE.Renderer, {
 
     });
 

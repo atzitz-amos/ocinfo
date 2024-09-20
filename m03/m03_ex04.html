@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <script>
+            let a = parseInt(prompt("Entrez a"));
+            let b = parseInt(prompt("Entrez b"));
+            let c = parseInt(prompt("Entrez c"));
+
+            while (Number.isNaN(a) || Number.isNaN(b) || Number.isNaN(c) || a * b * c === 0)
+                alert("Entrez des nombres non nuls.");
+            let s1 = (-b + Math.sqrt(b**2 + 4 * a * c)) / (2 * a);
+            let s2 = (-b - Math.sqrt(b**2 + 4 * a * c)) / (2 * a);
+
+            if (Number.isNaN(s1))
+                alert("L'équation n'a pas de solutions");
+            else if (s1 === s2)
+                alert("L'équation a une solution: " + s1);
+            else
+                alert("L'équation a deux solutions: " + s1 + ", " + s2);
+        </script>
+    </head>
+    <body>
+
+    </body>
+</html>

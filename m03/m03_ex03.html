@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <script>
+            let i = Math.ceil(Math.random() * 20);
+            if(function f(){
+                let n = parseInt(prompt("Entrez un nombre: "));
+                while (isNaN(n)) n = parseInt(prompt("Encore une fois: "));
+                if (n === i) {
+                    alert("Bravo");
+                    return;
+                }
+                if (n < i)
+                    alert("Trop petit");
+                else if (n > i)
+                    alert("Trop grand")
+                return f;
+            }()()()) {
+                alert("Le nombre était: " + i)
+            }
+        </script>
+    </head>
+    <body>
+
+    </body>
+</html>
