@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+
+        <meta charset="utf-8">
+        <title>M04 : ex 2, donnée</title>
+        
+        <script>
+
+            "use strict";
+
+            //déclaration des variables globales:
+
+            var numeroTour = 1;
+            var position = 0;
+
+            // déclaration de la fonction lancerDe(), qui retourne une valeur entière
+            // entre 1 et 6, calculée de manière aléatoire
+            let lancerDe = () => Math.ceil(Math.random()*6);
+
+
+            // déclaration de la fonction unTour(), qui gère toutes les opérations
+            // à effectuer en un tour de jeu et affiche la fenêtre alert qui donne
+            // le résultat de ce tour
+            // | 20 |
+            // +----+
+
+            function unTour() {
+                let d1 = lancerDe();
+                let d2 = lancerDe();
+                let s = d1 + d2;
+                if (d1 === 3 || d2 === 3) {
+                    s *= 2;
+                }
+                if (d1 === 4 && d2 === 4) {
+                    s = -8;
+                }
+                position = Math.min(Math.max(0, position + s), 20);
+
+                alert(`d1 = ${d1}\nd2 = ${d2}\nAvancée = ${s < 0 ? '-' : '+'}${s}\n\nTour = ${numeroTour++}\n\nVous êtes à la ${position}ème case.`);
+            }
+
+
+
+            // déclaration de la fonction jeu(), qui gère l'ensemble d'une partie
+            // et affiche la fenêtre donnant le résultat final du jeu
+
+            function jeu () {
+                    unTour();
+                    if (position === 20) {
+                    alert("Vous avez gagné!");
+                    return;
+                }
+                unTour();
+                if (position === 20) {
+                    alert("Vous avez gagné!");
+                    return;
+                }
+                unTour();
+                if (position === 20) {
+                    alert("Vous avez gagné!");
+                } else {
+                    alert("Dommage, vous êtes nul! (Ou bien vous avez pas de chance...)");
+                }
+            }
+
+            // appel de la fonction jeu()
+
+            jeu();
+
+
+        </script>
+    
+    </head>
+    
+    <body>
+
+    </body>
+</html>
