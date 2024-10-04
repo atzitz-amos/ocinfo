@@ -1,4 +1,5 @@
-from webq.core.components.component import HTMLComponent
+from webq.core.nodes.component import HTMLComponent
+from webq.core.nodes.renderers import NodeRendererBuilder
 
 
 class TextNode(HTMLComponent):
@@ -7,5 +8,7 @@ class TextNode(HTMLComponent):
 
         self.value = value
 
-    def render(self):
-        return self.value
+    def get_renderer(self):
+        return NodeRendererBuilder() \
+            .with_prefix(self.value) \
+            .build()

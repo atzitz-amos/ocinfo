@@ -20,7 +20,7 @@ class App:
                  static_url_path=None):
 
         self._flask = flask.Flask(import_name)
-        self._flask.url_map.add(werkzeug.routing.Rule("/<path:path>", endpoint="wrapper"))
+        self._flask.url_map.add(werkzeug.routing.Rule("/<path:path>", endpoint="_url_wrapper"))
         self._flask.view_functions["_webq__url_wrapper"] = self._url_wrapper
 
         self._templates = AppTemplatesManager(self)
@@ -30,6 +30,7 @@ class App:
             self.static_files = StaticFilesManager(self, static_folder, static_url_path)
         else:
             self.static_files = None
+
 
     """ Routing """
 
@@ -43,6 +44,13 @@ class App:
     def template(self, url: str, **kw):
         def decorator(f):
             self._build_route(url, self._templates.template_provider(url, f, **kw), **kw)
+            return f
+
+        return decorator
+
+    def component(self, name: str, **kw):
+        def decorator(f):
+            self._templates.register_component(name, f, kw)
             return f
 
         return decorator

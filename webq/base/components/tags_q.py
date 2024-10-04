@@ -5,16 +5,18 @@ Provides every html tag as of the HTML5 specification
     (https://html.spec.whatwg.org/dev/indices.html#elements-3).
 """
 import re
+import warnings
 
 from webq.base.templates.base import HTMLBaseTemplate
-from webq.core.components.component import HTMLComponent as _HTMLComponent
+from webq.core.nodes.component import HTMLComponent as _HTMLComponent
 
 __all__ = (
+    "HTML5_EVENTS_ATTRIBUTES",
     "HTML5_GLOBAL_ATTRIBUTES",
     "HTML5_ATTRIBUTES_PER_TAG",
     "ALL_TAGS",
     "ALL_TAGS_MAPPING",
-    "resolveAttribute",
+    "resolve_attribute",
     "html_q",
     'base_q',
     'head_q',
@@ -128,7 +130,9 @@ __all__ = (
     'dialog_q',
     'summary_q',
     'slot_q',
-    'template_q'
+    'template_q',
+
+    "component_q"
 )
 
 
@@ -141,26 +145,39 @@ def _factory(tagname, accepted_attributes=None, has_closing=True):
     def _(*children, **attributes):
         if accepted_attributes:
             for key in attributes:
-                if key not in accepted_attributes:
-                    raise ValueError(f"{key} is not a valid attribute for tag <{tagname}>")
+                if key not in accepted_attributes and not key.startswith("data"):
+                    warnings.warn(f"{key} is not a valid attribute for tag <{tagname}>")
         return _DefaultHTMLComponent(tagname, children, attributes, has_closing=has_closing)
 
     _.__name__ = tagname + "_q"
-    _.__doc__ = f"Create a new {tagname} tag\n\nSupported attributes: \n{['\t' + z + '\n' for z in accepted_attributes]}"
+    # _.__doc__ = f"Create a new {tagname} tag\n\nSupported attributes: \n{['\t' + z + '\n' for z in accepted_attributes]}"
     return _
 
 
-def resolveAttribute(name):
+def resolve_attribute(name):
     if name == "class_":
         return "class"
     elif name == "for_":
         return "for"
     elif name.startswith("data"):
-        return "data-" + resolveAttribute(name[4:])
+        return "data-" + resolve_attribute(name[4:])
     return "-".join(re.findall("[A-Z][^A-Z]*", name))
 
 
 # Attributes
+
+
+HTML5_EVENTS_ATTRIBUTES = {
+    'onabort', 'onafterprint', 'onbeforeprint', 'onbeforeunload', 'onblur', 'oncanplay', 'oncanplaythrough', 'onchange',
+    'onclick', 'oncontextmenu', 'oncopy', 'oncuechange', 'oncut', 'ondblclick', 'ondrag', 'ondragend', 'ondragenter',
+    'ondragleave', 'ondragover', 'ondragstart', 'ondrop', 'ondurationchange', 'onemptied', 'onended', 'onerror',
+    'onfocus', 'onhashchange', 'oninput', 'oninvalid', 'onkeydown', 'onkeypress', 'onkeyup', 'onload', 'onloadeddata',
+    'onloadedmetadata', 'onloadstart', 'onmousedown', 'onmousemove', 'onmouseout', 'onmouseover', 'onmouseup',
+    'onmousewheel', 'onoffline', 'ononline', 'onpagehide', 'onpageshow', 'onpaste', 'onpause', 'onplay', 'onplaying',
+    'onpopstate', 'onprogress', 'onratechange', 'onreset', 'onresize', 'onscroll', 'onsearch', 'onseeked', 'onseeking',
+    'onselect', 'onstalled', 'onstorage', 'onsubmit', 'onsuspend', 'ontimeupdate', 'ontoggle', 'onunload',
+    'onvolumechange', 'onwaiting', 'onwheel'
+}
 
 HTML5_GLOBAL_ATTRIBUTES = {
     'accesskey',
@@ -196,16 +213,20 @@ HTML5_GLOBAL_ATTRIBUTES = {
     'translate',
     'virtualkeyboardpolicy',
     'writingsuggestions'
-}
+} | HTML5_EVENTS_ATTRIBUTES
 HTML5_ATTRIBUTES_PER_TAG = {
     'form': {'accept', 'accept-charset', 'action', 'autocomplete', 'enctype', 'method', 'name', 'novalidate', 'target'},
-    'input': {'accept', 'alt', 'autocomplete', 'capture', 'checked', 'dirname', 'disabled', 'form', 'formaction', 'formenctype', 'formmethod', 'formnovalidate', 'formtarget', 'height', 'list', 'max', 'maxlength', 'minlength', 'min', 'multiple', 'name', 'pattern', 'placeholder', 'readonly', 'required', 'size', 'src', 'step', 'type', 'usemap', 'value', 'width'},
+    'input': {'accept', 'alt', 'autocomplete', 'capture', 'checked', 'dirname', 'disabled', 'form', 'formaction',
+              'formenctype', 'formmethod', 'formnovalidate', 'formtarget', 'height', 'list', 'max', 'maxlength',
+              'minlength', 'min', 'multiple', 'name', 'pattern', 'placeholder', 'readonly', 'required', 'size', 'src',
+              'step', 'type', 'usemap', 'value', 'width'},
     'caption': {'align'},
     'col': {'align', 'bgcolor', 'span'},
     'colgroup': {'align', 'bgcolor', 'span'},
     'hr': {'align', 'color'},
     'iframe': {'align', 'allow', 'height', 'loading', 'name', 'referrerpolicy', 'sandbox', 'src', 'srcdoc', 'width'},
-    'img': {'align', 'alt', 'border', 'crossorigin', 'decoding', 'height', 'ismap', 'loading', 'referrerpolicy', 'sizes', 'src', 'srcset', 'usemap', 'width'},
+    'img': {'align', 'alt', 'border', 'crossorigin', 'decoding', 'height', 'ismap', 'loading', 'referrerpolicy',
+            'sizes', 'src', 'srcset', 'usemap', 'width'},
     'table': {'align', 'background', 'bgcolor', 'border'},
     'tbody': {'align', 'bgcolor'}, 'td': {'align', 'background', 'bgcolor', 'colspan', 'headers', 'rowspan'},
     'tfoot': {'align', 'bgcolor'},
@@ -216,9 +237,11 @@ HTML5_ATTRIBUTES_PER_TAG = {
     'link': {'as', 'crossorigin', 'href', 'hreflang', 'integrity', 'media', 'referrerpolicy', 'rel', 'sizes', 'type'},
     'script': {'async', 'crossorigin', 'defer', 'integrity', 'referrerpolicy', 'src', 'type'},
     'select': {'autocomplete', 'disabled', 'form', 'multiple', 'name', 'required', 'size'},
-    'textarea': {'autocomplete', 'cols', 'dirname', 'disabled', 'enterkeyhint', 'form', 'inputmode', 'maxlength', 'minlength', 'name', 'placeholder', 'readonly', 'required', 'rows', 'wrap'},
+    'textarea': {'autocomplete', 'cols', 'dirname', 'disabled', 'enterkeyhint', 'form', 'inputmode', 'maxlength',
+                 'minlength', 'name', 'placeholder', 'readonly', 'required', 'rows', 'wrap'},
     'audio': {'autoplay', 'controls', 'crossorigin', 'loop', 'muted', 'preload', 'src'},
-    'video': {'autoplay', 'controls', 'crossorigin', 'height', 'loop', 'muted', 'playsinline', 'poster', 'preload', 'src', 'width'},
+    'video': {'autoplay', 'controls', 'crossorigin', 'height', 'loop', 'muted', 'playsinline', 'poster', 'preload',
+              'src', 'width'},
     'body': {'background', 'bgcolor'},
     'marquee': {'bgcolor', 'loop'},
     'object': {'border', 'data', 'form', 'height', 'name', 'type', 'usemap', 'width'},
@@ -230,7 +253,8 @@ HTML5_ATTRIBUTES_PER_TAG = {
     'font': {'color'},
     'time': {'datetime'},
     'track': {'default', 'kind', 'label', 'src', 'srclang'},
-    'button': {'disabled', 'form', 'formaction', 'formenctype', 'formmethod', 'formnovalidate', 'formtarget', 'name', 'type', 'value'},
+    'button': {'disabled', 'form', 'formaction', 'formenctype', 'formmethod', 'formnovalidate', 'formtarget', 'name',
+               'type', 'value'},
     'fieldset': {'disabled', 'form', 'name'},
     'optgroup': {'disabled', 'label'},
     'option': {'disabled', 'label', 'selected', 'value'},
@@ -261,7 +285,6 @@ NO_ATTRIBUTES = set()
 
 def html_q(*children, **attributes) -> HTMLBaseTemplate:
     return HTMLBaseTemplate(_DefaultHTMLComponent("html", children, attributes))
-
 
 base_q = _factory('base', accepted_attributes=HTML5_GLOBAL_ATTRIBUTES | HTML5_ATTRIBUTES_PER_TAG.get('base', NO_ATTRIBUTES), has_closing=False)
 head_q = _factory('head', accepted_attributes=HTML5_GLOBAL_ATTRIBUTES | HTML5_ATTRIBUTES_PER_TAG.get('head', NO_ATTRIBUTES))
@@ -382,3 +405,66 @@ ALL_TAGS = ['base', 'head', 'link', 'meta', 'style', 'title', 'body', 'address',
 ALL_TAGS_MAPPING = {"base": base_q, "head": head_q, "link": link_q, "meta": meta_q, "style": style_q, "title": title_q, "body": body_q, "address": address_q, "article": article_q, "aside": aside_q, "footer": footer_q, "header": header_q, "h1": h1_q, "h2": h2_q, "h3": h3_q, "h4": h4_q, "h5": h5_q, "h6": h6_q, "hgroup": hgroup_q, "main": main_q, "nav": nav_q, "section": section_q, "search": search_q, "blockquote": blockquote_q, "dd": dd_q, "div": div_q, "dl": dl_q, "dt": dt_q, "figcaption": figcaption_q, "figure": figure_q, "hr": hr_q, "li": li_q, "menu": menu_q, "ol": ol_q, "p": p_q, "pre": pre_q, "ul": ul_q, "a": a_q, "abbr": abbr_q, "b": b_q, "bdi": bdi_q, "bdo": bdo_q, "br": br_q, "cite": cite_q, "code": code_q, "data": data_q, "dfn": dfn_q, "em": em_q, "i": i_q, "kbd": kbd_q, "mark": mark_q, "q": q_q, "rp": rp_q, "rt": rt_q, "ruby": ruby_q, "s": s_q, "samp": samp_q, "small": small_q, "span": span_q, "strong": strong_q, "sub": sub_q, "sup": sup_q, "time": time_q, "u": u_q,
                     "var": var_q,
                     "wbr": wbr_q, "area": area_q, "audio": audio_q, "img": img_q, "map": map_q, "track": track_q, "video": video_q, "embed": embed_q, "iframe": iframe_q, "object": object_q, "picture": picture_q, "portal": portal_q, "source": source_q, "svg": svg_q, "canvas": canvas_q, "noscript": noscript_q, "script": script_q, "del": del_q, "ins": ins_q, "caption": caption_q, "col": col_q, "colgroup": colgroup_q, "table": table_q, "tbody": tbody_q, "td": td_q, "tfoot": tfoot_q, "th": th_q, "thead": thead_q, "tr": tr_q, "button": button_q, "datalist": datalist_q, "fieldset": fieldset_q, "form": form_q, "input": input_q, "label": label_q, "legend": legend_q, "meter": meter_q, "optgroup": optgroup_q, "option": option_q, "output": output_q, "progress": progress_q, "select": select_q, "textarea": textarea_q, "details": details_q, "dialog": dialog_q, "summary": summary_q, "slot": slot_q, "template": template_q}
+
+
+def component_q(value: str, default_cls=None):
+    name = ""
+    classes = []
+    id_ = ""
+    props = {}
+
+    i = 0
+
+    def _():
+        nonlocal i
+        s = ""
+        while i < len(value) and value[i] not in ".#[],=":
+            s += value[i]
+            i += 1
+        return s
+
+    name = _()
+    while i < len(value):
+        if value[i] == ".":
+            i += 1
+            classes.append(_())
+        elif value[i] == "#":
+            i += 1
+            id_ = _()
+        elif value[i] == "[":
+            i += 1
+            while True:
+                if i >= len(value):
+                    raise ValueError("Missing closing bracket in component declaration")
+                key = _()
+                if value[i] == "=":
+                    i += 1
+                    if value[i] in "'\"":
+                        sep = value[i]
+                        i += 1
+
+                        v = ""
+                        while value[i] != sep:
+                            v += value[i]
+                            i += 1
+                        i += 1
+                    else:
+                        v = _()
+                    props[key] = v
+                else:
+                    props[key] = ''
+                if value[i] == ",":
+                    i += 1
+                    while value[i] == " ":
+                        i += 1
+                elif value[i] == "]":
+                    i += 1
+                    break
+                else:
+                    raise ValueError("Invalid character in component declaration")
+
+    if name not in ALL_TAGS_MAPPING:
+        if default_cls is None:
+            raise ValueError(f"Unknown tag {name}")
+        return default_cls(id=id_, class_=" ".join(classes), **props)
+    return ALL_TAGS_MAPPING[name](id=id_, class_=" ".join(classes), **props)
