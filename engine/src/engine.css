@@ -1,0 +1,13 @@
+
+
+*:has(> .physical-world){
+    overflow: hidden;
+}
+
+.physical-world {
+    position: relative;
+}
+
+.physical-world .obj {
+    position: absolute;
+}

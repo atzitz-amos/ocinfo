@@ -5,14 +5,14 @@ body {
 
 
 @property --gx {
-    initial-value: 0%;
+    initial-value: 50%;
 
     syntax: "<length-percentage>";
     inherits: true;
 }
 
 @property --gy {
-    initial-value: 0%;
+    initial-value: 50%;
 
     syntax: "<length-percentage>";
     inherits: false;
@@ -25,6 +25,8 @@ body {
     background: #161621;
 
     box-shadow: inset -4px 6px 20px #ffffff;
+    border: 2px solid #fff0f0;
+    box-sizing: border-box;
     z-index: 100;
 
     transform: skewX(10deg) rotateY(46deg);
@@ -36,7 +38,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(ellipse at 50% 50%, #ffffff, transparent);
+    background: radial-gradient(ellipse at var(--gx) var(--gy), #ffffffb0, transparent);
 }
 
 .card-right {
@@ -52,12 +54,19 @@ body {
     top: 187.74px;
     left: 39px;
     background: #7c7c7c;
+
+    border: 1px solid #fff0f0;
+    box-sizing: border-box;
+    border-left-width: 4px;
 }
 
 .card-right ~ .card-shadow {
     transform: skewX(-60deg);
     top: 187.74px;
     left: 103px;
+
+    border-left-width: 0;
+    border-right-width: 4px;
 }
 
 .card-text {
@@ -70,4 +79,6 @@ body {
     font-weight: bolder;
     margin-top: -20px;
     transform: translateZ(20px);
+
+    pointer-events: none;
 }
