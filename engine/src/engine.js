@@ -27,6 +27,7 @@
             );
 
             this.center_of_mass = properties.center_of_mass || this.position.scaled(1); // Copy of the position
+            this.forces_sum = new ENGINE.Vector(0, 0, 0);
 
             this.velocity = new ENGINE.Vector(
                 properties.vx || 0,
@@ -181,11 +182,20 @@
 
             let forces = this.forces.concat(world_forces);
             let sum_force = new ENGINE.Vector(0, 0, 0);
+
+            let normal_force_index = null;
+            let i = -1;
             for (let f of forces) {
+                i++;
                 if (f.name === "gravity" && this.nogravity)
                     continue;
+                else if (f.name === "normal") {
+                    normal_force_index = i;
+                }
                 sum_force = sum_force.add(f.calculate(this));
             }
+
+            this.sum_force = sum_force;
 
             this.acceleration = sum_force.scaled(1 / this.mass);
             this.velocity = this.velocity.add(this.acceleration.scaled(elapsed));
@@ -207,6 +217,8 @@
 
 
             this.update_quadrants();
+
+            if(normal_force_index) this.forces.splice(normal_force_index);
         },
         update_quadrants: function () {
             let bbox = this.rendered_obj.getBBox();
@@ -317,6 +329,15 @@
         graphical_bbox: function () {
             return this._svg.getBoundingClientRect();
         },
+        normal_at: function (length) {
+            let dx = 1;
+            let after = this.children[0].element.getPointAtLength(length + dx)
+
+            let j = length - dx;
+            let before = this.children[0].element.getPointAtLength(j < 0 ? this.children[0].element.getTotalLength() + j : j)
+            return new ENGINE.Vector(-1, 0, 0)
+            return new ENGINE.Vector(-after.y + before.y, after.x - before.x);
+        }
     });
     assign(ENGINE.World, {
         init: function (renderer) {
@@ -358,9 +379,9 @@
             // b.velocity = new ENGINE.Vector(0, 0);
             // return;
 
-            let [rCO, nBA] = inter;
+            let [rCO, length] = inter;
             rCO = this.renderer.from_screen_coords(rCO);
-            nBA = nBA.normalize().scaled(-1);
+            nBA = a.rendered_obj.svg_obj.normal_at(length).normalize().scaled(-1);
 
 
             let e = 1; // TODO
@@ -370,8 +391,8 @@
             let rBO = b.position.add(b.center_of_mass);
             let rBC = rBO.sub(rCO);
 
-            // if (document.querySelector(".dot")) return;
-            //
+            if (document.querySelector(".dot")) return;
+
             // this.plot(rCO.x, rCO.y);
             // this.plot(rBO.x, rBO.y, "red");
             // this.plot(rAO.x, rAO.y, "blue");
@@ -388,6 +409,13 @@
 
             a.a_velocity = a.a_velocity.add(rAC.crossproduct(nBA).scaled(J * a.inertia_momentum ** -1));
             b.a_velocity = b.a_velocity.sub(rBC.crossproduct(nBA).scaled(J * b.inertia_momentum ** -1));
+
+            // normal force
+            let fA = a.sum_force.crossproduct(nBA.scaled(-1));
+            let fB = b.sum_force.crossproduct(nBA);
+
+            a.add_force(ENGINE.Force.NormalForce(fA));
+            a.add_force(ENGINE.Force.NormalForce(fB));
         },
         plot: function (x, y, color = "green", size = 5) {
             let d = document.createElement("div")
@@ -529,6 +557,8 @@
             return new ENGINE.Force("gravity", intensity, (vector, obj) => vector.scaled(obj.mass));
         }, Dummy: function (value) {
             return new ENGINE.Force("dummy", value);
+        }, NormalForce: function (vec) {
+            return new ENGINE.Force("normal", vec);
         }
     });
 
@@ -556,6 +586,8 @@
                     a.rendered_obj.svg_obj._svg.style.outline = "1px solid blue";
                     b.rendered_obj.svg_obj._svg.style.outline = "1px solid red";
                 }
+
+                [a, b] = a.velocity.norm() > b.velocity.norm() ? [a, b] : [b, a];
 
                 let c1 = a.rendered_obj.collider;
                 let c2 = b.rendered_obj.collider;
@@ -626,6 +658,7 @@
             } else if (rel_P.y === 0) {
                 return MBT;
             }
+
         },
         update_maybe_colliding: function () {
             this.maybe_colliding = [];
@@ -670,16 +703,12 @@
                 b.style.strokeWidth = t + "px!important";
 
                 if (b.isPointInStroke(y)) {
-                    let after = a.getPointAtLength(i + dx)
+                    // let after = a.getPointAtLength(i + dx)
+                    //
+                    // let j = i - dx;
+                    // let before = a.getPointAtLength(j < 0 ? a.getTotalLength() + j : j)
 
-                    let j = i - dx;
-                    let before = a.getPointAtLength(j < 0 ? a.getTotalLength() + j : j)
-
-                    if (x.x === 140 && x.y === 50) {
-                        console.log(1);
-                    }
-
-                    arr.push([x, new ENGINE.Vector(-after.y + before.y, after.x - before.x)]);  // Push normal vector
+                    arr.push([x, i]);  // Push normal vector
                 }
                 b.style.strokeWidth = s;
             }

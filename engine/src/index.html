@@ -21,7 +21,6 @@
         <script>
             let engine = ENGINE("create", {
                 "destroyOffScreen": true,
-                "debug.show_potential_collisions": true,
             });
             engine.reattach(document.querySelector(".main"));
 
@@ -41,15 +40,17 @@
             engine.world.add(engine.create("square", {
                 x: 1,
                 y: 0,
+                vx: 3,
                 size: 20,
-                mass: 1
+                mass: 1,
+                nogravity: true
             }), {"fill": "none", "stroke": "black"});
 
             engine.world.add(engine.create("square", {
-                x: 1,
-                y: 5,
+                x: 3,
+                y: 0.1,
                 size: 20,
-                mass: 10,
+                mass: 1,
                 nogravity: true
             }), {"fill": "none", "stroke": "black"});
 
