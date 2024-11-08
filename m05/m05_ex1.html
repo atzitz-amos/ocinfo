@@ -1,0 +1,39 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title>M04 : ex 1a, donnée</title>
+        <script>
+
+            "use strict";
+
+            let a = {
+                _x00: "Saisissez votre premier nombre",
+                _x89: "Saisissez votre deuxième nombre",
+                _x37: "Entrez les nombres dans l'ordre",
+                _x32: "Quelle boucle choisissez vous?",
+                _x25: "Pas un nombre"
+            }
+
+            !function  (a, b, c) {
+                return c(parseInt(prompt(a)), parseInt(prompt(b)))
+            }(a._x00, a._x89, function(a, b){
+                !function z(j, k){
+                    return (isNaN(j) && !alert(a._x25)) || (k && k(function (t, q, w) {
+                        confirm(a._x32) ? t("", w) : q("", w);
+                    })) || z;
+                }(a)(b, function (k) {
+                    (a > b) ? alert(a._x37) : k(function (s, w) {
+                        while(a <= b) {s = (a++ && false) || (s + (a-1) + "\n");} alert(w + "boucle while\n" + s);
+                    }, function (s, w) {
+                        for(let i=a; i<=b; i++) {s += i + "\n"} alert(w + "boucle for\n" + s);
+                    }, `Nombres entiers entre ${a} et ${b} :\n`);
+                });
+            });
+
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

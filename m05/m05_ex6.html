@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title>M04 : ex 1b, donnée</title>
+        <script>
+
+            !function () {
+                window._ = {
+                    pipe: function () {
+                        return {
+                            results: [],
+                            get: function (msg, check=null) {
+                                let w;
+                                do {
+                                    w = parseInt(prompt(msg));
+                                } while ((isNaN(w) || !check || !check(w)) && !alert("Nombre invalide"));
+                                this.results.push(w);
+                                return this;
+                            },
+                            then: function (callback) {
+                                let r = this.results;
+                                this.results = [];
+
+                                callback(...r);
+                            }
+
+                        };
+                    },
+                    repeat: function (...x) {
+                        if (x.length <= 1) {throw "Repeat requires minimum 2 arguments.";}
+                        if (x.length === 2) {
+                            for (let i=0; i<x[0]; i++) {
+                                x[1](i);
+                            }
+                        } else {
+                            for (let i=0; i<x[0]; i++) {
+                                this.repeat(...x.slice(1, x.length - 1).concat(x[x.length-1].bind(window, i)));
+                            }
+                        }
+                    }
+                }
+            }();
+
+            _.pipe()
+                .get("Entrez un nombre plus grand que 1:", n => n>1)
+                .then(n => {
+                   let fact = 1;
+                   for(let i=n; i>1; i--) {
+                       fact *= i;
+                   }
+                   alert(fact);
+                });
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

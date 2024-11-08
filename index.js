@@ -17,7 +17,7 @@ window.onload = () => {
 
         });
 
-        el.addEventListener("mouseleave", () => {
+        el.addEventListener("mouseout", () => {
             onElement = false;
             setTimeout(() => {
                 el.style.setProperty("--gx", "0px");
