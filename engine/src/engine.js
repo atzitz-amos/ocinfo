@@ -391,15 +391,15 @@
             let rBO = b.position.add(b.center_of_mass);
             let rBC = rBO.sub(rCO);
 
-            if (document.querySelector(".dot")) return;
-
-            this.plot(rCO.x, rCO.y);
-            this.plot(rBO.x, rBO.y, "red");
-            this.plot(rAO.x, rAO.y, "blue");
-            this.plotVector(rCO.x, rCO.y, nBA, "red");
-            a.velocity = new ENGINE.Vector(0, 0);
-            b.velocity = new ENGINE.Vector(0, 0);
-            return;
+            // if (document.querySelector(".dot")) return;
+            //
+            // this.plot(rCO.x, rCO.y);
+            // this.plot(rBO.x, rBO.y, "red");
+            // this.plot(rAO.x, rAO.y, "blue");
+            // this.plotVector(rCO.x, rCO.y, nBA, "red");
+            // a.velocity = new ENGINE.Vector(0, 0);
+            // b.velocity = new ENGINE.Vector(0, 0);
+            // return;
 
             let J = -(1 + e) * (a.velocity.add(a.a_velocity.crossproduct(rAC)).scalarmult(nBA) - b.velocity.add(b.a_velocity.crossproduct(rBC)).scalarmult(nBA))
                 / (1 / a.mass + 1 / b.mass + rAC.crossproduct(nBA).crossproduct(rAC).scaled(a.inertia_momentum ** -1).scalarmult(nBA) + rBC.crossproduct(nBA).crossproduct(rBC).scaled(a.inertia_momentum ** -1).scalarmult(nBA))

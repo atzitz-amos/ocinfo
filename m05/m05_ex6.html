@@ -10,7 +10,7 @@
                     pipe: function () {
                         return {
                             results: [],
-                            get: function (msg, check=null) {
+                            get: function (msg, check = null) {
                                 let w;
                                 do {
                                     w = parseInt(prompt(msg));
@@ -28,29 +28,51 @@
                         };
                     },
                     repeat: function (...x) {
-                        if (x.length <= 1) {throw "Repeat requires minimum 2 arguments.";}
+                        if (x.length <= 1) {
+                            throw "Repeat requires minimum 2 arguments.";
+                        }
                         if (x.length === 2) {
-                            for (let i=0; i<x[0]; i++) {
+                            for (let i = 0; i < x[0]; i++) {
                                 x[1](i);
                             }
                         } else {
-                            for (let i=0; i<x[0]; i++) {
-                                this.repeat(...x.slice(1, x.length - 1).concat(x[x.length-1].bind(window, i)));
+                            for (let i = 0; i < x[0]; i++) {
+                                this.repeat(...x.slice(1, x.length - 1).concat(x[x.length - 1].bind(window, i)));
                             }
                         }
+                    },
+                    accumulator: function (init) {
+                        return {
+                            value: init,
+                            repeat_n: function (...args) {
+                                _.repeat(...args.slice(0, args.length - 1), (i) => {
+                                    this.value = args[args.length - 1](this.value, i);
+                                });
+                                return this;
+                            },
+                            log_to: function (type) {
+                                type === "screen" ? alert(this.value) : console.log(this.value);
+                            }
+                        };
                     }
                 }
             }();
 
             _.pipe()
-                .get("Entrez un nombre plus grand que 1:", n => n>1)
+                .get("Entrez un nombre plus grand que 1:", n => n > 1)
                 .then(n => {
-                   let fact = 1;
-                   for(let i=n; i>1; i--) {
-                       fact *= i;
-                   }
-                   alert(fact);
+                    let fact = 1;
+                    for (let i = n; i > 1; i--) {
+                        fact *= i;
+                    }
+                    alert(fact);
                 });
+
+            _.pipe()
+                .get("Entrez un nombre entier:", n => Number.isInteger(n))
+                .then(n => {
+                    _.accumulator(1).repeat_n(n, (a, b) => a * b).log_to('screen');
+                })
         </script>
     </head>
     <body>

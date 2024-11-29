@@ -8,7 +8,7 @@ const pos = [
 const data = {
     modules: [
         {
-            id: "1",
+            id: "10",
             name: "HTML",
             exercises: [
                 {
@@ -50,7 +50,7 @@ const scene = {
             let bbox = module.getBoundingClientRect();
             let left = -bbox.left - bbox.width / 2;
             let top = -bbox.top - bbox.height / 2;
-            document.body.style.perspectiveOrigin = (bbox.left + bbox.width / 2 - 10) + "px " + (bbox.top + bbox.height / 2 + 20) + "px";
+            document.querySelector(".plane").style.perspectiveOrigin = (bbox.left + bbox.width / 2 - 10) + "px " + (bbox.top + bbox.height / 2 + 20) + "px";
             document.querySelector(".content").style.transformOrigin = `${left}px ${top}px`;
             document.body.classList.add("transition");
             document.querySelector(".content").animate([
@@ -65,12 +65,60 @@ const scene = {
 
                 try {
                     document.querySelector(".content-exercise-" + id).setAttribute("active", "");
+                    document.querySelector(".header").textContent = "Module " + id;
                 } catch (e) {
                     console.log(e);
                 }
 
                 document.body.classList.remove("transition");
             };
+        },
+    },
+    moduleTransitions: {
+        toExercise: (exercise) => {
+            document.querySelector(".content").style.transformOrigin = "center";
+            document.querySelector(".content-exercise-shower").style.transformOrigin = "center";
+
+            let anim1 = document.querySelector(".content").animate([
+                {
+                    transform: "rotateY(0deg)",
+                },
+                {
+                    transform: "rotateY(-90deg)",
+                    zIndex: 0,
+                    offset: 0.5
+                },
+                {
+                    transform: "rotateY(-90deg)",
+                    zIndex: 0
+                }
+            ], {
+                duration: 1000,
+                easing: "linear",
+                fill: "forwards"
+            });
+            anim1.onfinish = () => {
+                document.querySelector(".content").style.transform = "rotateY(-90deg)";
+                document.querySelector(".content").style.zIndex = "0";
+                anim1.cancel();
+            }
+            let anim2 = document.querySelector(".content-exercise-shower").animate([
+                {
+                    transform: "rotateY(90deg)",
+                    offset: 0.5,
+                },
+                {
+                    transform: "rotateY(0deg)",
+                }
+            ], {
+                duration: 1000,
+                easing: "linear",
+                fill: "forwards"
+            });
+            anim2.onfinish = () => {
+                document.querySelector(".content-exercise-shower").style.transform = "rotateY(0deg)";
+                anim2.cancel();
+            }
         }
     },
 
@@ -84,7 +132,7 @@ const scene = {
 
     },
     toExercise: (exercise) => {
-
+        scene.moduleTransitions.toExercise(exercise);
     },
     toMain: () => {
         document.querySelector("[active]").removeAttribute("active");
