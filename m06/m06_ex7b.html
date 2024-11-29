@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title> module 06, exercice 7a : corrigé </title>
+        <script>
+
+            "use strict";
+
+            // déclaration des fonctions
+
+            /*
+                        Cette fonction retourne un nombre aléatoire entier et
+                        compris entre 0 et 4 (bornes comprises), avec une même probabilité
+                        pour toutes les valeurs possibles.
+             */
+
+            function lancerDe() {
+                return Math.ceil(Math.random() * 5) - 1;
+            }
+
+            /*
+                        Cette fonction reçoit en paramètre deux nombres entiers :
+                        une valeur (x) et une valeur limite (limite).
+                        Elle retourne la valeur x+1 si x<limite ;
+                        sinon, elle retourne la valeur limite.
+             */
+
+            function augmenter(x, limite) {
+                return x < limite ? x + 1 : limite;
+            }
+
+            /*
+                        Cette fonction reçoit en paramètre un tableau (etat)
+                        représentant l'état du jeu (comme décrit dans la fonction jouerUnePartie).
+                        Elle retourne true si le joueur a gagné et false sinon.
+             */
+
+            function joueurAGagne(etat) {
+                return (etat[0] + etat[1] + etat[2] + etat[3]) === 40
+            }
+
+            /*
+                        Cette fonction reçoit en paramètre un tableau (etat)
+                        représentant l'état du jeu (comme décrit dans la fonction jouerUnePartie).
+                        Elle retourne true si le corbeau a gagné et false sinon.
+             */
+
+            function corbeauAGagne(etat) {
+                return etat[4] === 9;
+            }
+
+            /*
+                        Cette fonction gère une partie complète du jeu du corbeau.
+            */
+
+            function jouerUnePartie() {
+
+                /*
+                                Le tableau tEtatJeu représente l'état du jeu.
+                                Les éléments d'indice 0 à 3 correspondent aux nombres
+                                de fruits récoltés (dans l'ordre suivant : nbre de pommes,
+                                nbre de poires, nbre de cerises et nbre de pruneaux).
+                                L'élément d'indice 4 correspond au nombre de pièces
+                                déjà posées dans le puzzle du corbeau.
+                 */
+                var tEtatJeu = [0, 0, 0, 0, 0];
+
+                /*
+                                Le tableau tLimite contient les valeurs limites pour chaque élément
+                                (quatre arbres et un puzzle).
+                 */
+
+                var tLimite = [10, 10, 10, 10, 9];
+
+                var de = 0; // variable représentant le dé
+
+                let victory;
+                while ((victory = corbeauAGagne(tEtatJeu) ? -1 : (joueurAGagne(tEtatJeu) ? 1 : 0)) === 0) {
+                    de = lancerDe();
+                    tEtatJeu[de] = augmenter(tEtatJeu[de], tLimite[de]);
+                }
+                return victory;
+
+            }
+
+            // lancement du programme
+            for (var i = 0, j = 0; i < 10000; i++) {
+                j += jouerUnePartie() === -1 ? 1 : 0;
+            }
+
+            alert(`Le corbeau a un taux de réussite de ${j/i*100}% de victoire.`);
+
+        </script>
+    </head>
+
+    <body>
+    </body>
+</html>
+

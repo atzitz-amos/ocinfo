@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title> module 06, exercice 8 : donnée </title>
+        <script>
+
+            "use strict";
+
+            //déclaration des fonctions
+
+/*
+            La fonction suivante reçoit en paramètre une lettre (chaîne de caractères
+            contenant un élément) et un nombre entier.
+            Elle retourne une lettre correspondant à la valeur cryptée de la lettre
+            entrée.
+            Par exemple :
+            - si lettre = 'B' et nC = 2, la fonction retourne la valeur 'D'.
+            - si lettre = 'H' et nC = 10, la fonction retourne la valeur 'R'.
+            - si lettre = 'X' et nC = 5, la fonction retourne la valeur 'C'.
+*/
+
+            function crypter(lettre,nC) {
+
+                var tLettres = [
+                'A','B','C','D','E','F','G','H','I','J','K','L',
+                'M','N','O','P','Q','R','S','T','U','V','W','X',
+                'Y','Z',' '];
+ /*
+                autre posibilité, plus compacte :
+                var tLettres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ '.split();
+ */
+                }
+/*
+                Remarque : si la lettre ne se trouve pas dans le tableau tLettres,
+                on ne la crypte pas !
+ */
+
+            }
+
+/*
+            La fonction suivante contient les instructions adéquates pour demander
+            à l'utilisateur de lui fournir un niveau de cryptage et un texte à crypter,
+            puis faire apparaître une fenêtre contenant le résultat du cryptage.
+*/
+
+            function init(){
+
+                var niveauCryptage = 0; // décalage pour le cryptage
+                var texteBase = ''; // chaîne de caractères entrée par l'utilisateur
+                var tTexteAvant = []; // tableau contenant les caractères entrés par l'utilisateur
+                var tTexteApres = []; // tableau contenant les caractères cryptés
+                var txt = ''; // texte qui sera affiché dans la fenêtre alert
+/*
+                La boucle while suivante permet de faire apparaître une fenêtre
+                prompt contenant une demande à l'utilisateur pour qu'il entre
+                un nombre entier entre 1 et 10 permettant de définir le niveau de cryptage.
+                Si l'utilisateur n'a pas entré un nombre adéquat, la fenêtre
+                apparaît à nouveau.
+
+ */
+
+/*
+                La boucle while suivante permet de faire apparaître une fenêtre
+                prompt contenant une demande à l'utilisateur pour qu'il saisisse
+                le texte à crypter (qui doit être écrit en majuscules).
+                Si l'utilisateur n'a entré aucun texte, la fenêtre
+                apparaît à nouveau. Si l'utilisateur a entré des caractères qui
+                ne sont pas des lettres ou qui ne sont pas des majuscules,
+                ces caractères apparaîtront dans le texte final, mais ne seront pas cryptés .
+
+ */
+
+/*
+                L'instruction suivante transforme la chaîne de caractères entrée
+                par l'utilisateur en un tableau.
+
+ */
+
+/*
+                La boucle for suivante construit le tableau contenant les caractères
+                cryptés.
+ */
+
+/*
+                Les instructions suivantes permettent de construire le texte adéquat et
+                de l'afficher dans une fenêtre alert.
+ */
+
+            }
+
+            //lancement du programme
+
+            init();
+
+
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

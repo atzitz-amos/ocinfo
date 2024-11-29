@@ -41,7 +41,7 @@
                 x: 1,
                 y: 0,
                 vx: 3,
-                rot: 0,
+                rot: 1,
                 size: 20,
                 mass: 1,
                 nogravity: false
@@ -56,7 +56,7 @@
                 nogravity: false
             }), {"fill": "none", "stroke": "black"});
 
-            engine.world.gravity({x: 0, y: 4.81});
+            engine.world.gravity({x: 0, y: 9.81});
             engine.render();
 
             engine.run();

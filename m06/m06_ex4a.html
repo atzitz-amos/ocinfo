@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title> module 06, exercice 4 : donnée </title>
+        <script>
+
+            "use strict";
+
+            !function () {
+                window._ = {
+                    pipe: function () {
+                        return {
+                            results: [],
+                            get: function (msg, check = null) {
+                                let w;
+                                do {
+                                    w = parseInt(prompt(msg));
+                                } while ((isNaN(w) || !check || !check(w)) && !alert("Nombre invalide"));
+                                this.results.push(w);
+                                return this;
+                            },
+                            then: function (callback) {
+                                let r = this.results;
+                                this.results = [];
+
+                                callback(...r);
+                            },
+                            asint: function () {
+                                return this.results[0];
+                            }
+                        };
+                    },
+                    repeat: function (...x) {
+                        if (x.length <= 1) {
+                            throw "Repeat requires minimum 2 arguments.";
+                        }
+                        if (x.length === 2) {
+                            for (let i = 0; i < x[0]; i++) {
+                                x[1](i);
+                            }
+                        } else {
+                            for (let i = 0; i < x[0]; i++) {
+                                this.repeat(...x.slice(1, x.length - 1).concat(x[x.length - 1].bind(window, i)));
+                            }
+                        }
+                    }
+                }
+            }();
+
+            //déclaration de la fonction recueillirValeur(x)
+            function recueillirValeur(x) {
+                return _.pipe()
+                    .get(`Entrez une valeur entre 1 et ${x}.`, i => 1 <= i && i <= x)
+                    .asint();
+            }
+
+            //déclaration de la fonction afficherResultat(t)
+            function afficherResultat(t) {
+                let i = recueillirValeur(t.length);
+                alert(`Le sous-tableau n°${i} contient les éléments suivants:\n${t[i-1].join(",")}`);
+            }
+
+            //test du programme
+            var tPhysiciens = [['Niels','Erwin','Wolfgang','Werner','Enrico','Richard'],
+                ['Bohr','Schrödinger','Pauli','Heisenberg','Fermi','Feynman'], [1885,1887,1900,1901,1901,1918]];
+            afficherResultat(tPhysiciens);
+
+        </script>
+    </head>
+    <body>
+
+    </body>
+</html>

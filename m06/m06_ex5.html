@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title> module 06, exercice 5 : donnée </title>
+        <script>
+
+            "use strict";
+
+            //déclaration de la fonction determinerNbresPairs(tN)
+            let determinerNbresPairs = (tN) => {
+                let arr = tN.filter(x => x % 2 === 0);
+                alert(`Ce tableau contient ${arr.length} nombres pairs. \nCes nombres sont:\n${arr.join("\n")}`)
+            }
+
+            //test de la fonction determinerNbresPairs(tN)
+            determinerNbresPairs([6,9,1,23,45,6,2,7,0,1246]);
+
+        </script>
+    </head>
+    <body>
+
+    </body>
+</html>
