@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title>M05 : ex 1</title>
+        <noscript>
+            <div style="font-size: 5em;color: black;text-align: center;position: absolute;font-family: math;top: 15%;width: 100%;font-style: italic;pointer-events: none;">
+                Javascript is disabled
+            </div>
+        </noscript>
+        <script>
+
+            "use strict";
+
+            let W = {
+                _x00: "Saisissez votre premier nombre",
+                _x89: "Saisissez votre deuxième nombre",
+                _x37: "Entrez les nombres dans l'ordre",
+                _x32: "Quelle boucle choisissez vous?",
+                _x25: "Pas un nombre"
+            }
+
+            !function (a, b, c, _w, Z) {
+                return c((Z=_w(a)), _w(b, Z))
+            }(W._x00, W._x89, function (a, b) {
+                !function z(j, k) {
+                    return (isNaN(j) && !alert(W._x25)) || (k && k(function (t, q, w) {
+                        confirm(W._x32) ? t("", w) : q("", w);
+                    })) || z;
+                }(a)(b, function (k) {
+                    (a > b) ? alert(W._x37) : k(function (s, w) {
+                        while (a <= b) {
+                            s = (a++ && false) || (s + (a - 1) + "\n");
+                        }
+                        alert(w + "boucle while\n" + s);
+                    }, function (s, w) {
+                        for (let i = a; i <= b; i++) {
+                            s += i + "\n"
+                        }
+                        alert(w + "boucle for\n" + s);
+                    }, `Nombres entiers entre ${a} et ${b} :\n`);
+                });
+            }, function z(j, o, w) {
+                return (((w = parseInt(prompt(j))) || true) && (isNaN(w) || o >= w) && !alert("Ce n'est pas un nombre ou bien les nombres ne sont pas dans l'ordre")) ? z(j) : w;
+            });
+
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

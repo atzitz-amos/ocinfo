@@ -3,29 +3,35 @@
     <head>
         <meta charset="UTF-8">
         <title>Title</title>
+        <noscript>
+            <div style="font-size: 5em;color: black;text-align: center;position: absolute;font-family: math;top: 15%;width: 100%;font-style: italic;pointer-events: none;">
+                Javascript is disabled
+            </div>
+        </noscript>
         <script>
-let final = [null, null, null, null, null];
-!function f(q) {
-    let r = [];
-    let s = "";
-    for (let i = 0; i < 5; i++) {
-        let val = final[i]
-        if (val == null) {
-            val = Math.ceil(Math.random() * 6);
-        }
-        r.push(val);
-        s += `Dé ${i + 1}: ${val}\n`
-    }
-    alert(s + "Choisissez les dés que vous voulez garder!");
-    if (!q) {
-        for (let i = 0; i < 5; i++) {
-            if (confirm(`Garder le dé ${i + 1}?\nValeur du dé: ${r[i]}`)) {
-                final[i] = r[i];
-            }
-        }
-    }
-    return f;
-}()()(true);
+            let final = [null, null, null, null, null];
+            !function f(q) {
+                let r = [];
+                let s = "";
+                for (let i = 0; i < 5; i++) {
+                    let val = final[i]
+                    if (val == null) {
+                        val = Math.ceil(Math.random() * 6);
+                    }
+                    r.push(val);
+                    s += `Dé ${i + 1}: ${val}\n`
+                }
+                alert(s + "Choisissez les dés que vous voulez garder!");
+                if (!q) {
+                    for (let i = 0; i < 5; i++) {
+                        if (confirm(`Garder le dé ${i + 1}?\nValeur du dé: ${r[i]}`)) {
+                            final[i] = r[i];
+                        }
+                    }
+                }
+                return f;
+            }()()(true);
+            alert(`Vos dés finaux sont: ${final.join(", ")}`);
         </script>
     </head>
     <body>

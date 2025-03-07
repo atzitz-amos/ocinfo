@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title> module 06, exercice 6 : donnée </title>
+        <noscript><div style="font-size: 5em;color: black;text-align: center;position: absolute;font-family: math;top: 15%;width: 100%;font-style: italic;pointer-events: none;">Javascript is disabled</div></noscript><script>
+
+            "use strict";
+
+            //déclaration des fonctions
+
+            /*
+                        Cette fonction crée un tableau contenant 500 nombres entiers
+                        entre 1 et 10 générés aléatoirement avec la même probabilité
+                        et renvoie le tableau créé.
+             */
+
+            function genererTableauNombreAlea() {
+                return new Array(500).fill(0, 0, 500).map(() => Math.ceil(Math.random() * 10))
+            }
+
+            /*
+                        Cette fonction reçoit en arguments un tableau de nombres (t) et un nombre (x).
+                        Elle renvoie un nombre entier qui correspond au nombre de fois
+                        où le nombre x apparaît dans le tableau t.
+                        Par exemple, si t=[5,4,78,4,9,4] et x=4, la fonction renvoie la valeur 3.
+             */
+
+            function compterNombres(t) {
+                return new Array(10).fill(0, 0, 10).map((_, i) => t.filter(x => x === i + 1).length);
+            }
+
+            /*
+                        Cette fonction contient les instructions permettant de construire et
+                        d'afficher le texte apparaissant dans la fenêtre alert. En particulier,
+                        elle contient les appels adéquats aux fonctions genererTableauNombreAlea()
+                        et compterNombre(t,x).
+             */
+
+            function init() {
+                alert(`Résultat du comptage:\n${compterNombres(genererTableauNombreAlea()).map((x, i) => `${i+1}: ${x}`).join('\n')}`)
+            }
+
+            //lancement du programme
+            init();
+
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

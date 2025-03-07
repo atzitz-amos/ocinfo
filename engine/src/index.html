@@ -22,7 +22,9 @@
             let engine = ENGINE("create", {
                 "destroyOffScreen": true,
             });
-            engine.reattach(document.querySelector(".main"));
+            engine.rattach(document.querySelector(".main"));
+
+            engine.mouse_collider.enable();
 
             // for (let i = 0; i < 2; i++) {
             //     let square = engine.create("square", {
@@ -40,7 +42,7 @@
             engine.world.add(engine.create("square", {
                 x: 1,
                 y: 0,
-                vx: 3,
+                vx: 0,
                 rot: 1,
                 size: 20,
                 mass: 1,
@@ -56,7 +58,6 @@
                 nogravity: false
             }), {"fill": "none", "stroke": "black"});
 
-            engine.world.gravity({x: 0, y: 9.81});
             engine.render();
 
             engine.run();

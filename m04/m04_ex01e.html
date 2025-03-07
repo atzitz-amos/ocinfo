@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title>M04 : ex 1e, donnée</title>
+        <noscript><div style="font-size: 5em;color: black;text-align: center;position: absolute;font-family: math;top: 15%;width: 100%;font-style: italic;pointer-events: none;">Javascript is disabled</div></noscript><script>
+
+            "use strict";
+
+            /*
+            Ecrivez la déclaration de la fonction genererNbreAleatoire(...) qui reçoit en paramètres deux nombres, x et y, et qui retourne un nombre aléatoire compris entre ces deux nombres (bornes comprises).
+
+            Par exemple :
+            - L'appel genererNbreAleatoire(6,10) ou genererNbreAleatoire(10,6) retourne la valeur 6, 7, 8, 9 ou 10 avec une probabilité égale.
+            - L'appel genererNbreAleatoire(-3,0) retourne la valeur -3, -2, -1, ou 0 avec une probabilité égale.
+             */
+            let genererNbreAleatoire = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+
+
+            /*
+            Ecrivez la déclaration de la fonction controlerNbresEtAfficher(...) qui
+
+            - demande à l'utilisateur (via deux fenêtres prompt successives) de lui fournir deux nombres entiers.
+
+            - vérifie si les valeurs fournies sont des nombres. Sinon, fait apparaître un message adéquat via une fenêtre alert.
+
+            - S'il s'agit bien de deux nombres, vérifie si les nombres proposés sont des nombres entiers. Sinon, fait apparaître un message adéquat via une fenêtre alert.
+
+            - S'il s'agit bien de deux nombres entiers, utilise la fonction genererNbreAleatoire (...) pour générer un nombre aléatoire compris entre les deux nombres entiers entrés par l'utilisateur et affiche le résultat via une fenêtre alert.
+
+            Exemple de message : 'Le nombre généré aléatoirement entre -34 et 45 est -14.'
+             */
+            function controlerNbresEtAfficher() {
+                let a, b;
+                while (isNaN((a = parseInt(prompt("Entrez un nombre entier: "))))) alert("Entrez un NOMBRE!");
+                while (isNaN((b = parseInt(prompt("Entrez un nombre entier: "))))) alert("Entrez un NOMBRE!");
+
+
+                alert(`Le nombre généré aléatoirement entre ${a} et ${b} est ${genererNbreAleatoire(a, b)}.`);
+            }
+
+            /*
+            Ecrivez l'instruction qui permet de lancer le programme.
+             */
+
+            controlerNbresEtAfficher();
+
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

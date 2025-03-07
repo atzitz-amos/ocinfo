@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title>M05 : ex 8</title>
+        <noscript><div style="font-size: 5em;color: black;text-align: center;position: absolute;font-family: math;top: 15%;width: 100%;font-style: italic;pointer-events: none;">Javascript is disabled</div></noscript><script>
+
+            "use strict";
+
+            //déclaration des variables globales
+            var joueur1, joueur2;
+
+            var resJ1 = 0, resJ2 = 0;
+
+
+            //déclaration des fonctions
+
+            let get_names = () => {
+                joueur1 = prompt('Ecrivez le prénom du joueur n°1');
+                joueur2 = prompt('Ecrivez le prénom du joueur n°2');
+            }
+
+            let get_cards = () => {
+                return [6 + Math.floor(Math.random() * 9), 1 + Math.floor(Math.random() * 4)];
+            }
+
+            let get_color_name = (c) => {
+                if (c === 1) {
+                    return "carreau";
+                } else if (c === 2) {
+                    return "trèfle";
+                } else if (c === 3) {
+                    return "pique";
+                } else if (c === 4) {
+                    return "coeur";
+                }
+            }
+
+            let play_turn = (i) => {
+                let [n1, c1] = get_cards();
+                let [n2, c2] = get_cards();
+
+                alert(`tour n°${i}:\n` +
+                    joueur1 + " a obtenu le " + n1 + " de " + get_color_name(c1) + ".\n" +
+                    joueur2 + " a obtenu le " + n2 + " de " + get_color_name(c2) + ".\n");
+
+                if (n1 > n2) {
+                    resJ1++;
+                    alert(joueur1 + ` a gagné le tour n°${i}`);
+                } else if (n1 < n2) {
+                    resJ2++;
+                    alert(joueur2 + ` a gagné le tour n°${i}`);
+                } else {
+                    if (c1 < c2) {
+                        resJ1++;
+                        alert(joueur1+ ` a gagné le tour n°${i}`);
+                    } else {
+                        resJ2++;
+                        alert(joueur2+ ` a gagné le tour n°${i}`);
+                    }
+                }
+            }
+
+
+            //Programme principal
+
+            function jouerPartie() {
+                //appel des fonctions
+                get_names();
+
+                play_turn(1);
+                play_turn(2);
+                play_turn(3);
+
+                if (resJ1 === resJ2) {
+                    alert("Les deux joueurs ont gagné la partie!");
+                } else if (resJ1 > resJ2) {
+                    alert(joueur1 + " a gagné la partie!");
+                } else {
+                    alert(joueur2 + " a gagné la partie!");
+                }
+            }
+
+            //lancer le programme principal
+            jouerPartie();
+
+        </script>
+    </head>
+    <body>
+
+    </body>
+</html>

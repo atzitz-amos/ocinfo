@@ -1,4 +1,4 @@
-!function ($, $$, assign, make_callable, thrower) {
+!function ($) {
     let ENGINE = {}
 
     Object.assign(ENGINE, {
@@ -87,6 +87,7 @@
             this.quadrant_y_size = 1;
         },
         Renderer: function (options) {
+            this.engine = null;
             this.options = options || {};
 
             this.objects = {};
@@ -101,14 +102,22 @@
 
             this.collisions = [];
         },
+        MouseCollider: function (world) {
+            this.world = world;
+
+            this.isEnabled = false;
+            this.onmousemove = this._onmousemove.bind(this);
+        },
         Engine: function (world, options) {
             this.options = options || {};
 
             this.world = world || new ENGINE.World();
             this.collider = this.options.collider || new ENGINE.Collider(this.world);
             this.renderer = this.options.renderer || new ENGINE.Renderer(options);
+            this.mouse_collider = new ENGINE.MouseCollider(this.world);
 
             this.world.init(this.renderer);
+            this.renderer.engine = this;
 
             this.time = null;
             this.startTimestamp = null;
@@ -218,7 +227,7 @@
 
             this.update_quadrants();
 
-            if(normal_force_index) this.forces.splice(normal_force_index);
+            if (normal_force_index) this.forces.splice(normal_force_index);
         },
         update_quadrants: function () {
             let bbox = this.rendered_obj.getBBox();
@@ -391,8 +400,8 @@
             let rBO = b.position.add(b.center_of_mass);
             let rBC = rBO.sub(rCO);
 
-            // if (document.querySelector(".dot")) return;
-            //
+            if (document.querySelector(".dot")) return;
+
             // this.plot(rCO.x, rCO.y);
             // this.plot(rBO.x, rBO.y, "red");
             // this.plot(rAO.x, rAO.y, "blue");
@@ -483,7 +492,7 @@
         }
     });
     assign(ENGINE.Engine, {
-        reattach: function (parent) {
+        rattach: function (parent) {
             this.renderer.init(parent, this.world.options);
         },
         render: function () {
@@ -723,6 +732,57 @@
                 }
             }
             return arr;
+        },
+        collide_part_with_point: function (element, x, y) {
+            const t = 2;
+            const dx = 1;
+
+            let arr = [];
+
+            for (let i = 0; i < element.getTotalLength(); i++) {
+                let p = element.getPointAtLength(i)
+                p = p.matrixTransform(element.getScreenCTM());
+
+                if (x + t > p.x && x - t < p.x && y + t > p.y && y - t < p.y) {
+                    // let after = a.getPointAtLength(i + dx)
+                    //
+                    // let j = i - dx;
+                    // let before = a.getPointAtLength(j < 0 ? a.getTotalLength() + j : j)
+
+                    arr.push([x, i]);  // Push normal vector
+                }
+            }
+
+            return arr;
+        },
+        collide_point: function (obj, x, y) {
+            let arr = [];
+            for (let a of obj.rendered_obj.svg_obj.children) {
+                arr = arr.concat(this.collide_part_with_point(a.element, x, y));
+            }
+            return arr;
+        }
+    });
+    assign(ENGINE.MouseCollider, {
+        enable: function () {
+            this.isEnabled = true;
+            this.world.renderer.scene.addEventListener("mousemove", this.onmousemove);
+        },
+        disable: function () {
+            this.isEnabled = false;
+            this.world.renderer.scene.removeEventListener("mousemove", this.onmousemove);
+        },
+        _onmousemove(e) {
+            this.check_collision(e.clientX, e.clientY);
+        },
+        check_collision: function (x, y) {
+
+            for (let obj of this.world.objects_list) {
+                let inter = obj.rendered_obj.collider.collide_point(obj, x, y);
+                if (inter.length !== 0) {
+                    console.log("Colliding");
+                }
+            }
         }
     });
 
@@ -731,7 +791,48 @@
      * END */
     window.ENGINE = make_callable(ENGINE);
 
-}(document.querySelector, (x, s, m) => {
+}(document.querySelector);
+
+
+function thrower(msg) {
+    throw "error: " + msg;
+}
+
+function make_callable(o) {
+    function F(cmd) {
+        let path = cmd.split(".");
+        if (path[0] in o) {
+            let x = o;
+            let this_ = o;
+            for (let i = 0; i < path.length; i++) {
+                if (path[i] in x) {
+                    x = x[path[i]];
+                    if (i < path.length - 1)
+                        this_ = x;
+                } else {
+                    throw "error: " + path[i] + " is not a function";
+                }
+            }
+            return x.call(this_, ...Array.prototype.slice.call(arguments, 1));
+        }
+        throw "error: " + path[i] + " is not a function";
+    }
+
+    for (let k in o) {
+        F[k] = o[k];
+    }
+    return F;
+}
+
+function assign(p, v) {
+    Object.assign(p.prototype, v)
+}
+
+function pushHistory(array, item, length) {
+    array.unshift(item) > length ? array.pop() : null
+}
+
+function $$(x, s, m) {
     function _(e, t, v) {
         switch (t) {
             case '.':
@@ -766,32 +867,4 @@
         s.appendChild(l);
     }
     return l;
-}, (p, v) => {
-    Object.assign(p.prototype, v)
-}, o => {
-    function F(cmd) {
-        let path = cmd.split(".");
-        if (path[0] in o) {
-            let x = o;
-            let this_ = o;
-            for (let i = 0; i < path.length; i++) {
-                if (path[i] in x) {
-                    x = x[path[i]];
-                    if (i < path.length - 1)
-                        this_ = x;
-                } else {
-                    throw "error: " + path[i] + " is not a function";
-                }
-            }
-            return x.call(this_, ...Array.prototype.slice.call(arguments, 1));
-        }
-        throw "error: " + path[i] + " is not a function";
-    }
-
-    for (let k in o) {
-        F[k] = o[k];
-    }
-    return F;
-}, msg => {
-    throw "error: " + msg;
-});
+}

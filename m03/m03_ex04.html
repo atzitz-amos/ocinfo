@@ -3,22 +3,31 @@
     <head>
         <meta charset="UTF-8">
         <title>Title</title>
+        <noscript>
+            <div style="font-size: 5em;color: black;text-align: center;position: absolute;font-family: math;top: 15%;width: 100%;font-style: italic;pointer-events: none;">
+                Javascript is disabled
+            </div>
+        </noscript>
         <script>
             let a = parseInt(prompt("Entrez a"));
             let b = parseInt(prompt("Entrez b"));
             let c = parseInt(prompt("Entrez c"));
 
-            while (Number.isNaN(a) || Number.isNaN(b) || Number.isNaN(c) || a * b * c === 0)
+            if (Number.isNaN(a) || Number.isNaN(b) || Number.isNaN(c)) {
+                alert("Entrez des nombres.");
+            } else if (a * b * c === 0) {
                 alert("Entrez des nombres non nuls.");
-            let s1 = (-b + Math.sqrt(b**2 + 4 * a * c)) / (2 * a);
-            let s2 = (-b - Math.sqrt(b**2 + 4 * a * c)) / (2 * a);
+            } else {
+                let s1 = (-b + Math.sqrt(b ** 2 + 4 * a * c)) / (2 * a);
+                let s2 = (-b - Math.sqrt(b ** 2 + 4 * a * c)) / (2 * a);
 
-            if (Number.isNaN(s1))
-                alert("L'équation n'a pas de solutions");
-            else if (s1 === s2)
-                alert("L'équation a une solution: " + s1.toFixed(1));
-            else
-                alert("L'équation a deux solutions: " + s1.toFixed(1) + ", " + s2.toFixed(1));
+                if (Number.isNaN(s1))
+                    alert("L'équation n'a pas de solutions");
+                else if (s1 === s2)
+                    alert("L'équation a une solution: " + s1.toFixed(1));
+                else
+                    alert("L'équation a deux solutions: " + s1.toFixed(1) + ", " + s2.toFixed(1));
+            }
         </script>
     </head>
     <body>
